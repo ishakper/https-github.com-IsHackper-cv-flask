@@ -21,31 +21,15 @@ HTML = '''
     :root { --accent:#ff7a00; --light-bg:#f7f9fb; --hover-bg:#f0f0f0; }
     body { background:var(--light-bg); font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial; overflow-x: hidden; }
 
-    /* ANIMASI MASUK (STAGGERED) */
-    .stagger { opacity: 0; transform: translateY(20px); animation: fadeUp 0.8s ease forwards; }
-    .stagger:nth-child(1){animation-delay:0.2s;}
-    .stagger:nth-child(2){animation-delay:0.4s;}
-    .stagger:nth-child(3){animation-delay:0.6s;}
-    .stagger:nth-child(4){animation-delay:0.8s;}
-
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ANIMASI LIST ITEM */
-    .animated-list li {
+    /* ANIMASI DASAR */
+    .stagger, .animated-list li {
       opacity: 0;
-      transform: translateX(-10px);
-      animation: slideIn 0.5s ease forwards;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
-    .animated-list li:nth-child(1){animation-delay:0.3s;}
-    .animated-list li:nth-child(2){animation-delay:0.5s;}
-    .animated-list li:nth-child(3){animation-delay:0.7s;}
-    .animated-list li:nth-child(4){animation-delay:0.9s;}
-    .animated-list li:nth-child(5){animation-delay:1.1s;}
-
-    @keyframes slideIn {
-      to { opacity: 1; transform: translateX(0); }
+    .stagger.animate, .animated-list li.animate {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* FOTO PROFIL */
@@ -154,7 +138,25 @@ HTML = '''
       </div>
     </div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Animasi scroll (Intersection Observer)
+    document.addEventListener("DOMContentLoaded", () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate");
+            observer.unobserve(entry.target); // supaya hanya sekali
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll(".stagger, .animated-list li").forEach(el => {
+        observer.observe(el);
+      });
+    });
+  </script>
 </body>
 </html>
 '''
