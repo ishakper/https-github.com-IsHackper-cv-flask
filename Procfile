@@ -1,1 +1,1 @@
-web: python cv_web_flask.py
+web: gunicorn cv_web_flask:app
