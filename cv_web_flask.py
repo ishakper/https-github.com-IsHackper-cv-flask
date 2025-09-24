@@ -21,13 +21,13 @@ HTML = '''
     :root { --accent:#ff7a00; --light-bg:#f7f9fb; --hover-bg:#f0f0f0; }
     body { background:var(--light-bg); font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial; overflow-x: hidden; }
 
-    /* ANIMASI DASAR */
-    .stagger, .animated-list li {
+    /* ANIMASI MASUK */
+    .reveal {
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
     }
-    .stagger.animate, .animated-list li.animate {
+    .reveal.active {
       opacity: 1;
       transform: translateY(0);
     }
@@ -71,10 +71,15 @@ HTML = '''
       background-color: var(--hover-bg);
     }
 
-    /* LIST HOVER */
+    /* LIST ITEM */
     ul li {
-      transition: transform 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
-      cursor: pointer;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.6s ease;
+    }
+    ul li.visible {
+      opacity: 1;
+      transform: translateX(0);
     }
     ul li:hover {
       transform: translateX(5px) scale(1.05);
@@ -86,7 +91,7 @@ HTML = '''
 <body>
   <div class="container my-5">
     <div class="row g-4">
-      <div class="col-lg-4 stagger">
+      <div class="col-lg-4 reveal">
         <div class="left-panel text-center">
           <img src="/image/profil.jpg" class="avatar mb-3" alt="foto">
           <h3 class="fw-bold">ISHAK HADI PERNAMA</h3>
@@ -100,7 +105,7 @@ HTML = '''
           <p><strong>SMK 1 DOKO</strong><br>Jurusan Bisnis dan Informatika<br><small>2018 - 2021</small></p>
           <p><strong>Politeknik Negeri Banyuwangi</strong><br>Jurusan Bisnis dan Informatika<br><small>2021 - Sekarang</small></p>
           <h5 class="mt-4">SKILLS</h5>
-          <ul class="list-unstyled animated-list">
+          <ul class="list-unstyled">
             <li>📌 Manajemen Organisasi</li>
             <li>📌 Kepemimpinan</li>
             <li>📌 Kerja Tim</li>
@@ -112,24 +117,24 @@ HTML = '''
         </div>
       </div>
 
-      <div class="col-lg-8 stagger">
+      <div class="col-lg-8 reveal">
         <div class="right-panel">
-          <h4 class="fw-bold stagger">PROFILE</h4>
-          <p class="stagger">Mahasiswa Teknologi Rekayasa Perangkat Lunak Politeknik Negeri Banyuwangi angkatan 2023 dengan pengalaman kepemimpinan dan organisasi...</p>
-          <h4 class="fw-bold mt-4 stagger">EXPERIENCE</h4>
-          <div class="mb-3 stagger">
+          <h4 class="fw-bold reveal">PROFILE</h4>
+          <p class="reveal">Mahasiswa Teknologi Rekayasa Perangkat Lunak Politeknik Negeri Banyuwangi angkatan 2023 dengan pengalaman kepemimpinan dan organisasi...</p>
+          <h4 class="fw-bold mt-4 reveal">EXPERIENCE</h4>
+          <div class="mb-3 reveal">
             <h6 class="mb-0">Ketua Umum – FORBIMWANGI</h6>
             <small class="text-muted">2023 - 2025</small>
-            <ul class="animated-list">
+            <ul>
               <li>Memimpin dan mengelola organisasi.</li>
               <li>Menginisiasi program pengembangan anggota.</li>
               <li>Mengawasi dan mengkoordinasi aktivitas organisasi.</li>
             </ul>
           </div>
-          <div class="mb-3 stagger">
+          <div class="mb-3 reveal">
             <h6 class="mb-0">Anggota Departemen PSDM – Himpunan Mahasiswa Bisnis dan Informatika</h6>
             <small class="text-muted">2023 - 2024</small>
-            <ul class="animated-list">
+            <ul>
               <li>Mengembangkan program peningkatan keterampilan anggota.</li>
               <li>Membantu koordinasi pelaksanaan kegiatan organisasi.</li>
             </ul>
@@ -139,24 +144,31 @@ HTML = '''
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Animasi scroll (Intersection Observer)
-    document.addEventListener("DOMContentLoaded", () => {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate");
-            observer.unobserve(entry.target); // supaya hanya sekali
-          }
-        });
-      }, { threshold: 0.2 });
-
-      document.querySelectorAll(".stagger, .animated-list li").forEach(el => {
-        observer.observe(el);
+    // ANIMASI SCROLL REVEAL
+    function reveal() {
+      document.querySelectorAll(".reveal").forEach(function(el) {
+        let windowHeight = window.innerHeight;
+        let elementTop = el.getBoundingClientRect().top;
+        let elementVisible = 150;
+        if (elementTop < windowHeight - elementVisible) {
+          el.classList.add("active");
+        }
       });
-    });
+
+      document.querySelectorAll("ul li").forEach(function(li) {
+        let windowHeight = window.innerHeight;
+        let elementTop = li.getBoundingClientRect().top;
+        if (elementTop < windowHeight - 50) {
+          li.classList.add("visible");
+        }
+      });
+    }
+
+    window.addEventListener("scroll", reveal);
+    window.addEventListener("load", reveal);
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 '''
